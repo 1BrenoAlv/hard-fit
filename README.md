@@ -1,6 +1,6 @@
 # HardFit Club
 
-Landing page de um curso de musculação para um projeto de extensão universitária.
+Landing page da mentoria de musculação HardFit Club.
 
 ## Tecnologias
 
@@ -20,14 +20,18 @@ npm run build
 npm run preview
 ```
 
-## Funcionalidades
+## Fluxo da mentoria
 
-Navegação por seções, menu responsivo, carrosséis de objetivos e módulos com setas, indicadores, toque e teclado, seção motivacional, perguntas frequentes e formulário em modal com validação nativa e confirmação demonstrativa. O modal suporta teclado, Escape e foco contido pelo elemento dialog.
+O visitante pode iniciar a conversa no Instagram, no WhatsApp ou pelo botão de contato do site. A página de compra, as aulas e a comunidade ficam na Hotmart. Os profissionais da HardFit participam do fórum para responder às dúvidas dos alunos.
 
-## Escopo do MVP
+Copie `.env.example` para `.env.local` e preencha com os endereços oficiais:
 
-O projeto contém somente o frontend. O formulário não envia nem armazena dados e não processa pagamentos. Preço, programa e condições de acesso são ilustrativos. A integração com Java será realizada em outra etapa.
+- `VITE_INSTAGRAM_URL`: perfil ou link de contato do Instagram da HardFit.
+- `VITE_WHATSAPP_URL`: link de conversa do WhatsApp da HardFit.
+- `VITE_HOTMART_CHECKOUT_URL`: link de compra da mentoria na Hotmart.
+
+As opções aparecem quando os links correspondentes estão configurados. Reinicie o servidor local após editar o arquivo. Para hospedar a página, configure as mesmas variáveis no ambiente de build e gere um novo deploy. O acesso à comunidade precisa estar configurado no produto da Hotmart.
 
 ## Imagens
 
-O comparativo está preparado para carregar `public/images/transformation.png`. O download do anexo foi bloqueado pelo ambiente e a foto ainda precisa ser copiada para esse caminho. Enquanto estiver ausente, a seção exibe um espaço reservado sem imagem quebrada. As fotografias de academia são do Unsplash, carregadas por URL. Os direitos da imagem fornecida permanecem com seus respectivos titulares.
+Para exibir a foto de evolução, adicione o arquivo em `public/images/transformation.png`. Enquanto a foto estiver indisponível, a seção mostra uma mensagem sobre progresso no treino. As fotos de academia são do Unsplash e carregam por URL.

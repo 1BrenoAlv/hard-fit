@@ -33,7 +33,6 @@
   .carousel-track { scrollbar-width: none; }
   .carousel-track::-webkit-scrollbar { display: none; }
   .carousel-arrow { @apply flex size-11 items-center justify-center rounded-full border border-lime/40 text-lime transition hover:bg-lime hover:text-forest disabled:cursor-default disabled:border-cream/10 disabled:bg-transparent disabled:text-cream/20; }
-  .field { @apply mt-2 w-full rounded-none border border-forest/25 bg-white/50 px-4 py-3 text-base text-forest outline-none transition focus:border-forest focus:ring-1 focus:ring-forest; }
   .hero-image { background-image: linear-gradient(90deg, #0d1b14 0%, rgb(13 27 20 / 97%) 22%, rgb(13 27 20 / 35%) 58%, rgb(13 27 20 / 7%) 100%), linear-gradient(0deg, #0d1b14 0%, transparent 35%), url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=2200&q=85'); }
   .curriculum-image { background-image: linear-gradient(0deg, rgb(13 27 20 / 65%), rgb(13 27 20 / 5%)), url('https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=1000&q=85'); }
 }

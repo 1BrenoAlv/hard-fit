@@ -1,48 +1,49 @@
-import { useEffect, useRef, useState } from 'react'
-import { ArrowUpRight, Check, X } from 'lucide-react'
+import { useEffect, useRef } from 'react'
+import { ArrowUpRight, Camera, MessageCircle, ShoppingBag, X } from 'lucide-react'
+import { mentorshipLinks } from '../mentorshipLinks'
+
+const enrollmentOptions = [
+  { label: 'Falar pelo WhatsApp', href: mentorshipLinks.whatsapp, icon: MessageCircle },
+  { label: 'Falar pelo Instagram', href: mentorshipLinks.instagram, icon: Camera },
+  { label: 'Continuar para a Hotmart', href: mentorshipLinks.checkout, icon: ShoppingBag },
+].filter(option => option.href)
 
 export default function EnrollmentDialog({ isOpen, onClose }) {
   const dialogReference = useRef(null)
-  const [isSubmitted, setIsSubmitted] = useState(false)
-  const [firstName, setFirstName] = useState('')
 
   useEffect(() => {
     const dialog = dialogReference.current
     if (isOpen && !dialog.open) dialog.showModal()
     if (!isOpen && dialog.open) dialog.close()
-    if (!isOpen) setIsSubmitted(false)
   }, [isOpen])
 
-  function handleSubmit(event) {
-    event.preventDefault()
-    const formData = new FormData(event.currentTarget)
-    setFirstName(String(formData.get('name')).trim().split(' ')[0])
-    setIsSubmitted(true)
-  }
-
   return (
-    <dialog ref={dialogReference} onCancel={onClose} onClose={onClose} onClick={event => { if (event.target === dialogReference.current) onClose() }} aria-labelledby="enrollment-title" className="fixed inset-0 m-auto max-h-[90dvh] w-[calc(100%-2rem)] max-w-lg overflow-y-auto border border-forest/15 bg-cream p-7 text-forest shadow-2xl sm:p-10">
-      <button onClick={onClose} aria-label="Fechar formulário" className="absolute top-4 right-4 p-2"><X size={20} /></button>
-      {isSubmitted ? (
-        <div className="py-7 text-center" role="status">
-          <div className="mx-auto mb-6 flex size-14 items-center justify-center rounded-full bg-forest text-lime"><Check size={26} /></div>
-          <h2 id="enrollment-title" className="text-3xl">Primeiro passo dado, {firstName}.</h2>
-          <p className="mt-4 text-base leading-relaxed text-forest/70">Você concluiu a simulação de interesse no HardFit Club. Nenhum dado foi enviado ou armazenado e nenhuma cobrança foi realizada.</p>
-          <button onClick={onClose} className="primary-button mt-8 w-full border-forest bg-forest text-cream hover:border-forest hover:bg-forest-light">Voltar para o clube <ArrowUpRight size={18} /></button>
-        </div>
-      ) : (
+    <dialog
+      ref={dialogReference}
+      onClose={onClose}
+      onClick={event => { if (event.target === dialogReference.current) onClose() }}
+      aria-labelledby="enrollment-title"
+      className="fixed inset-0 m-auto max-h-[90dvh] w-[calc(100%-2rem)] max-w-lg overflow-y-auto rounded-xl border border-cream/20 bg-forest p-7 text-cream shadow-2xl sm:p-10"
+    >
+      <button type="button" onClick={onClose} aria-label="Fechar opções de contato" className="absolute top-3 right-3 grid size-11 place-items-center rounded-lg hover:bg-white/10"><X size={20} aria-hidden="true" /></button>
+      <p className="section-label mt-5 text-lime">Mentoria HardFit</p>
+      <h2 id="enrollment-title" className="mt-5 text-3xl leading-tight sm:text-4xl">Como você quer começar?</h2>
+      {enrollmentOptions.length > 0 ? (
         <>
-          <span className="section-label mt-4 text-forest/65">O seu próximo capítulo</span>
-          <h2 id="enrollment-title" className="mt-5 text-4xl leading-tight">Toda evolução tem um <em>começo.</em></h2>
-          <p className="mt-4 text-sm leading-relaxed text-forest/65">Conheça o formulário de interesse do HardFit Club.</p>
-          <form onSubmit={handleSubmit} className="mt-7 space-y-5">
-            <label className="block text-sm">Seu nome<input name="name" autoComplete="name" placeholder="Como podemos chamar você?" required minLength={2} maxLength={100} pattern=".*\S.*" className="field" /></label>
-            <label className="block text-sm">Seu e-mail<input name="email" type="email" autoComplete="email" placeholder="voce@exemplo.com" required maxLength={254} className="field" /></label>
-            <label className="block text-sm">Seu momento no treino<select name="experience" required defaultValue="" className="field"><option value="" disabled>Selecione uma opção</option><option value="beginner">Vou começar agora</option><option value="returning">Estou voltando a treinar</option><option value="experienced">Já treino e quero evoluir</option></select></label>
-            <p className="border-l-2 border-forest/25 pl-3 text-xs leading-relaxed text-forest/65">Formulário demonstrativo do projeto de extensão. Seus dados não são enviados nem armazenados.</p>
-            <button type="submit" className="primary-button w-full border-forest bg-forest text-cream hover:border-forest hover:bg-forest-light">Simular meu interesse <ArrowUpRight size={18} /></button>
-          </form>
+          <p className="mt-4 text-sm leading-relaxed text-muted">Fale com a equipe para tirar dúvidas. A compra é feita pela Hotmart.</p>
+          <div className="mt-7 grid gap-3">
+            {enrollmentOptions.map(({ label, href, icon: Icon }) => (
+              <a key={label} href={href} className={href === mentorshipLinks.checkout ? 'primary-button' : 'secondary-button'}>
+                <Icon size={18} className="shrink-0" aria-hidden="true" />
+                {label}
+                <ArrowUpRight size={16} className="shrink-0" aria-hidden="true" />
+              </a>
+            ))}
+          </div>
+          {!mentorshipLinks.checkout && <p className="mt-5 text-sm text-muted">As inscrições pela Hotmart ainda não estão abertas.</p>}
         </>
+      ) : (
+        <p className="mt-4 text-sm leading-relaxed text-muted">A mentoria está em preparação. Os canais oficiais de contato e o link de inscrição serão divulgados aqui.</p>
       )}
     </dialog>
   )
