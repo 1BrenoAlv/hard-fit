@@ -7,7 +7,7 @@ export default function Brand({ compact = false }) {
       {!compact && (
         <span className="flex flex-col">
           <span className="text-[23px] font-bold leading-none tracking-[-0.05em]">HardFit<span className="font-semibold"> Club</span></span>
-          <span className="mt-1.5 text-[8px] tracking-[0.34em] uppercase text-lime/80">Conhecimento que transforma</span>
+          <span className="mt-1.5 hidden text-[8px] tracking-[0.34em] uppercase text-lime/80 min-[400px]:block">Conhecimento que transforma</span>
         </span>
       )}
     </a>

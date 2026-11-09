@@ -2,14 +2,13 @@ import { useEffect, useRef } from 'react'
 import { ArrowUpRight, Camera, MessageCircle, ShoppingBag, X } from 'lucide-react'
 import { mentorshipLinks } from '../mentorshipLinks'
 
-const enrollmentOptions = [
-  { label: 'Falar pelo WhatsApp', href: mentorshipLinks.whatsapp, icon: MessageCircle },
-  { label: 'Falar pelo Instagram', href: mentorshipLinks.instagram, icon: Camera },
-  { label: 'Continuar para a Hotmart', href: mentorshipLinks.checkout, icon: ShoppingBag },
-].filter(option => option.href)
-
-export default function EnrollmentDialog({ isOpen, onClose }) {
+export default function EnrollmentDialog({ isOpen, onClose, checkoutUrl }) {
   const dialogReference = useRef(null)
+  const enrollmentOptions = [
+    { label: 'Falar pelo WhatsApp', href: mentorshipLinks.whatsapp, icon: MessageCircle },
+    { label: 'Falar pelo Instagram', href: mentorshipLinks.instagram, icon: Camera },
+    { label: 'Continuar para a Hotmart', href: checkoutUrl, icon: ShoppingBag },
+  ].filter(option => option.href)
 
   useEffect(() => {
     const dialog = dialogReference.current
@@ -33,14 +32,14 @@ export default function EnrollmentDialog({ isOpen, onClose }) {
           <p className="mt-4 text-sm leading-relaxed text-muted">Fale com a equipe para tirar dúvidas. A compra é feita pela Hotmart.</p>
           <div className="mt-7 grid gap-3">
             {enrollmentOptions.map(({ label, href, icon: Icon }) => (
-              <a key={label} href={href} className={href === mentorshipLinks.checkout ? 'primary-button' : 'secondary-button'}>
+              <a key={label} href={href} className={href === checkoutUrl ? 'primary-button' : 'secondary-button'}>
                 <Icon size={18} className="shrink-0" aria-hidden="true" />
                 {label}
                 <ArrowUpRight size={16} className="shrink-0" aria-hidden="true" />
               </a>
             ))}
           </div>
-          {!mentorshipLinks.checkout && <p className="mt-5 text-sm text-muted">As inscrições pela Hotmart ainda não estão abertas.</p>}
+          {!checkoutUrl && <p className="mt-5 text-sm text-muted">As inscrições pela Hotmart ainda não estão abertas.</p>}
         </>
       ) : (
         <p className="mt-4 text-sm leading-relaxed text-muted">A mentoria está em preparação. Os canais oficiais de contato e o link de inscrição serão divulgados aqui.</p>
