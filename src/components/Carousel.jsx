@@ -43,7 +43,7 @@ export default function Carousel({ label, slides }) {
   return (
     <section role="region" aria-roledescription="carrossel" aria-label={label}>
       <div id={trackId} ref={trackReference} onKeyDown={handleKeyDown} tabIndex={0} aria-label={`${label}. Use as setas do teclado para navegar.`} className="carousel-track flex snap-x snap-mandatory overflow-x-auto rounded-2xl border border-lime/20 focus-visible:outline-2 focus-visible:outline-lime">
-        {slides.map((slide, index) => <div key={slide.id} role="group" aria-roledescription="slide" aria-label={`${index + 1} de ${slides.length}: ${slide.label}`} className="w-full shrink-0 snap-start snap-always">{slide.content}</div>)}
+        {slides.map((slide, index) => <div key={slide.id} role="group" aria-roledescription="slide" aria-label={`${index + 1} de ${slides.length}: ${slide.label}`} className="flex w-full shrink-0 snap-start snap-always flex-col">{slide.content}</div>)}
       </div>
       <div className="mt-6 flex items-center justify-between gap-4">
         <div className="flex gap-2" aria-label="Selecionar slide">{slides.map((slide, index) => <button key={slide.id} type="button" aria-label={`Ir para ${slide.label}`} aria-controls={trackId} aria-current={activeSlide === index ? 'true' : undefined} onClick={() => navigateToSlide(index)} className="group flex min-h-11 min-w-9 items-center justify-center"><span className={`block h-1 rounded-full transition-all ${activeSlide === index ? 'w-9 bg-lime' : 'w-5 bg-cream/25 group-hover:bg-cream/60'}`} /></button>)}</div>

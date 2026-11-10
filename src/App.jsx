@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ArrowDown, ArrowUpRight, BookOpen, Check, ChevronDown, Dumbbell, MessagesSquare, MoveUpRight, Target } from 'lucide-react'
 import Brand from './components/Brand'
 import Header from './components/Header'
+import HighlightsMarquee from './components/HighlightsMarquee'
 import TransformationShowcase from './components/TransformationShowcase'
 import EnrollmentDialog from './components/EnrollmentDialog'
 import MotivationSection from './components/MotivationSection'
@@ -9,6 +10,7 @@ import GoalCarousel from './components/GoalCarousel'
 import MentorshipSupport from './components/MentorshipSupport'
 import { mentorshipLinks } from './mentorshipLinks'
 import { frequentlyAskedQuestions, navigationLinks } from './content'
+import { loadSiteContent } from './siteApi'
 
 const methodPrinciples = [
   { icon: BookOpen, title: 'Entenda o porquê.', description: 'Chega de repetir movimentos no automático. Aprenda os fundamentos por trás de um treino bem feito.' },
@@ -18,7 +20,20 @@ const methodPrinciples = [
 
 export default function App() {
   const [isEnrollmentOpen, setIsEnrollmentOpen] = useState(false)
+  const [siteContent, setSiteContent] = useState(null)
   const openEnrollment = () => setIsEnrollmentOpen(true)
+  const settings = siteContent?.settings
+  const checkoutUrl = settings?.hotmartUrl || mentorshipLinks.checkout
+  const heroStyle = settings?.heroImageUrl
+    ? { '--hero-image': `url(${JSON.stringify(settings.heroImageUrl)})` }
+    : undefined
+
+  useEffect(() => {
+    if (window.location.protocol === 'file:') return
+    const controller = new AbortController()
+    loadSiteContent(controller.signal).then(setSiteContent).catch(() => {})
+    return () => controller.abort()
+  }, [])
 
   return (
     <>
@@ -26,7 +41,7 @@ export default function App() {
       <Header onEnrollmentClick={openEnrollment} />
       <main id="conteudo">
         <section id="inicio" className="relative isolate min-h-[710px] overflow-hidden">
-          <div className="hero-image absolute inset-0 -z-20 bg-cover bg-center" role="img" aria-label="Academia com equipamentos de musculação" />
+          <div className="hero-image absolute inset-0 -z-20 bg-cover bg-center" style={heroStyle} role="img" aria-label="Imagem de destaque da HardFit" />
           <div className="absolute inset-0 -z-10 bg-forest/10" />
           <div className="page-container relative pt-17 pb-11 md:pt-22">
             <p className="section-label text-lime">Mentoria de musculação</p>
@@ -40,30 +55,31 @@ export default function App() {
               <button type="button" onClick={openEnrollment} className="primary-button">Falar com a HardFit <ArrowUpRight size={19} className="shrink-0" aria-hidden="true" /></button>
               <a href="#acompanhamento" className="secondary-button">Como funciona <ArrowDown size={16} className="shrink-0" aria-hidden="true" /></a>
             </div>
-            <div className="mt-7 flex items-center gap-2.5 text-xs text-cream/75">
-              <MessagesSquare size={17} className="shrink-0 text-lime" aria-hidden="true" /> Aulas e comunidade na Hotmart
+            <div className="mt-7 flex items-start justify-between gap-8">
+              <div className="flex items-center gap-2.5 text-xs text-cream/75">
+                <MessagesSquare size={17} className="shrink-0 text-lime" aria-hidden="true" /> Aulas e comunidade na Hotmart
+              </div>
+              <blockquote className="hidden w-88 rounded-r-lg border-l-2 border-lime/65 bg-forest/65 px-6 py-5 lg:block">
+                <p className="text-xs font-semibold tracking-[0.16em] text-lime uppercase">A mentalidade HardFit</p>
+                <p className="mt-2 text-2xl leading-snug font-semibold text-balance xl:text-[1.7rem]">“O processo é o que transforma.”</p>
+              </blockquote>
             </div>
-            <div className="absolute right-14 bottom-11 hidden max-w-44 border-l border-lime/50 pl-5 lg:block"><span className="text-[10px] tracking-[0.2em] text-lime uppercase">A mentalidade HardFit</span><p className="mt-3 text-xl leading-snug font-semibold">“O processo é o que transforma.”</p></div>
           </div>
         </section>
 
-        <div className="border-y border-lime/20 bg-lime text-forest">
-          <div className="page-container flex flex-wrap items-center justify-center gap-x-8 gap-y-4 py-5 text-[11px] tracking-[0.18em] uppercase md:justify-between">
-            <span>Mais consciência</span><span aria-hidden="true">✳</span><span>Mais consistência</span><span aria-hidden="true" className="hidden sm:block">✳</span><span className="hidden sm:block">Mais evolução</span><span aria-hidden="true" className="hidden md:block">✳</span><span className="hidden md:block">Seu corpo. Seu processo.</span>
-          </div>
-        </div>
+        <HighlightsMarquee />
 
         <section id="evolucao" className="border-y border-lime/15 bg-[#142017] py-20 text-cream md:py-25">
           <div className="page-container">
             <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end"><div><p className="section-label text-lime">Um passo de cada vez</p><h2 className="mt-5 text-4xl leading-[1.15] tracking-[-0.04em] md:text-5xl">A mudança acontece<br /><em>no processo.</em></h2></div><p className="max-w-xs text-sm leading-[1.8] text-muted">Mais do que uma imagem de antes e depois. O encontro entre treino, disciplina e constância.</p></div>
-            <TransformationShowcase />
+            <TransformationShowcase evolutions={siteContent?.evolutions ?? []} />
             <div className="mt-10 flex items-center justify-between gap-6 border-t border-cream/15 pt-7"><p className="text-xl font-semibold md:text-2xl">O próximo capítulo da sua história começa com você.</p><a href="#oferta" aria-label="Conhecer a oferta da mentoria" className="flex size-12 shrink-0 items-center justify-center rounded-full border border-lime/30 text-lime transition hover:bg-lime hover:text-forest"><ArrowUpRight size={22} /></a></div>
           </div>
         </section>
 
         <MentorshipSupport />
         <MotivationSection onEnrollmentClick={openEnrollment} />
-        <GoalCarousel onEnrollmentClick={openEnrollment} />
+        <GoalCarousel onEnrollmentClick={openEnrollment} settings={settings} />
 
         <section id="metodo" className="page-container py-22 md:py-28">
           <div className="grid gap-7 md:grid-cols-2 md:items-end md:gap-20">
@@ -95,10 +111,10 @@ export default function App() {
                 ))}
               </ul>
               <div className="mt-8 grid gap-3">
-                {mentorshipLinks.checkout && <a href={mentorshipLinks.checkout} className="primary-button">Inscrever-se pela Hotmart <ArrowUpRight size={18} className="shrink-0" aria-hidden="true" /></a>}
-                <button type="button" onClick={openEnrollment} className={mentorshipLinks.checkout ? 'secondary-button' : 'primary-button'}>Falar com a HardFit <ArrowUpRight size={18} className="shrink-0" aria-hidden="true" /></button>
+                {checkoutUrl && <a href={checkoutUrl} className="primary-button">Inscrever-se pela Hotmart <ArrowUpRight size={18} className="shrink-0" aria-hidden="true" /></a>}
+                <button type="button" onClick={openEnrollment} className={checkoutUrl ? 'secondary-button' : 'primary-button'}>Falar com a HardFit <ArrowUpRight size={18} className="shrink-0" aria-hidden="true" /></button>
               </div>
-              <p className="mt-4 text-center text-xs leading-relaxed text-muted">{mentorshipLinks.checkout ? 'Consulte o valor e as condições na página de compra.' : 'Compra e acesso pela Hotmart. Inscrições em breve.'}</p>
+              <p className="mt-4 text-center text-xs leading-relaxed text-muted">{checkoutUrl ? 'Consulte o valor e as condições na página de compra.' : 'Compra e acesso pela Hotmart. Inscrições em breve.'}</p>
             </div>
           </div>
         </section>
@@ -111,7 +127,7 @@ export default function App() {
         <section className="bg-lime py-16 text-forest"><div className="page-container flex flex-col justify-between gap-8 md:flex-row md:items-center"><div><p className="text-[10px] tracking-[0.22em] uppercase">O primeiro movimento é seu.</p><h2 className="mt-3 text-3xl tracking-[-0.04em] md:text-4xl">Comece de onde você está. <em>Vá além.</em></h2></div><button onClick={openEnrollment} className="inline-flex min-h-14 shrink-0 items-center justify-center gap-6 border border-forest bg-forest px-7 py-4 text-sm text-cream transition hover:bg-transparent hover:text-forest">Falar com a HardFit <MoveUpRight size={18} aria-hidden="true" /></button></div></section>
       </main>
       <footer className="page-container pt-14 pb-7"><div className="flex flex-col justify-between gap-8 border-b border-cream/15 pb-10 sm:flex-row sm:items-start"><div><Brand /><p className="mt-5 max-w-xs text-xs leading-[1.8] text-muted">Um clube para quem acredita que a evolução<br />se constrói, um dia de cada vez.</p></div><nav aria-label="Navegação do rodapé" className="flex flex-wrap gap-x-7 gap-y-4 text-xs text-muted">{navigationLinks.map(link => <a key={link.href} href={link.href} className="transition hover:text-lime">{link.label}</a>)}</nav><a href="#inicio" aria-label="Voltar ao início" className="flex size-10 items-center justify-center rounded-full border border-cream/25 transition hover:border-lime hover:text-lime"><ArrowUpRight size={17} /></a></div><div className="flex flex-col justify-between gap-3 pt-6 text-[10px] leading-relaxed text-muted/75 sm:flex-row"><p>© {new Date().getFullYear()} HardFit Club.</p><p>Mentoria de musculação · Aulas e comunidade na Hotmart</p></div></footer>
-      <EnrollmentDialog isOpen={isEnrollmentOpen} onClose={() => setIsEnrollmentOpen(false)} />
+      <EnrollmentDialog isOpen={isEnrollmentOpen} onClose={() => setIsEnrollmentOpen(false)} checkoutUrl={checkoutUrl} />
     </>
   )
 }

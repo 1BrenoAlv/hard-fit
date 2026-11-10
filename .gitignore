@@ -3,3 +3,10 @@ dist
 .assets-incoming
 .DS_Store
 *.local
+/.env
+/backend/.env
+/backend/.idea/
+/backend/target/
+
+/backend/uploads/
+/uploads/
