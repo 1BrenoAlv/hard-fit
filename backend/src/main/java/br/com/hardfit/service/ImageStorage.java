@@ -21,11 +21,11 @@ public class ImageStorage {
     private static final long MAX_IMAGE_BYTES = 5L * 1024 * 1024;
 
     private final Path uploadDirectory;
-    private final SupabaseImageStorage supabase;
+    private final R2ImageStorage r2;
 
-    public ImageStorage(@Value("${hardfit.upload-directory}") String uploadDirectory, SupabaseImageStorage supabase) {
+    public ImageStorage(@Value("${hardfit.upload-directory}") String uploadDirectory, R2ImageStorage r2) {
         this.uploadDirectory = Path.of(uploadDirectory).toAbsolutePath().normalize();
-        this.supabase = supabase;
+        this.r2 = r2;
     }
 
     public String save(MultipartFile file) throws IOException {
@@ -38,8 +38,8 @@ public class ImageStorage {
 
         byte[] bytes = file.getBytes();
         String filename = UUID.randomUUID() + "." + imageExtension(bytes);
-        if (supabase.isConfigured()) {
-            return supabase.upload(filename, MediaTypeFactory.getMediaType(filename).orElseThrow(), bytes);
+        if (r2.isConfigured()) {
+            return r2.upload(filename, MediaTypeFactory.getMediaType(filename).orElseThrow(), bytes);
         }
         Files.createDirectories(uploadDirectory);
         Files.write(uploadDirectory.resolve(filename), bytes, StandardOpenOption.CREATE_NEW);

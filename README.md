@@ -40,22 +40,24 @@ As opções aparecem quando os links correspondentes estão configurados. Reinic
 
 ## Imagens
 
-Use o painel para publicar imagens JPG, PNG ou WebP de até 5 MB por arquivo. Localmente, a API guarda os arquivos em `uploads`. No deploy pelo Blueprint, as novas imagens ficam no Supabase Storage.
+Use o painel para publicar imagens JPG, PNG ou WebP de até 5 MB por arquivo. Para usar o Cloudflare R2, preencha as variáveis `R2_*` em `backend/.env`. O modelo está em `backend/.env.example`. Com as variáveis vazias, o ambiente local guarda os arquivos em `uploads`.
 
 ## Deploy no Render
 
-1. Crie ou selecione um projeto no Supabase. Em **Storage**, crie um bucket público chamado `hardfit-images` para as imagens publicadas no site.
-2. Em **Connect**, copie os dados do **Session pooler**. Use o host e a porta exibidos para montar `jdbc:postgresql://HOST:PORTA/postgres?sslmode=require`. Copie o usuário do pooler exatamente como aparece.
+1. Crie um bucket `hardfit-images` no Cloudflare R2. Crie uma chave da API S3 com leitura e gravação restritas a esse bucket. Configure a URL pública de leitura para as imagens do site.
+2. Crie ou selecione um banco PostgreSQL. Use os dados da conexão para montar `jdbc:postgresql://HOST:PORTA/BANCO`. Para conexão externa, use as opções SSL indicadas pelo provedor.
 3. No Render, conecte este repositório em **New → Blueprint**. O `render.yaml` configura um único serviço Docker para a landing page, o painel e a API.
 4. Preencha as variáveis solicitadas diretamente no Render.
 
 | Variável | Valor |
 | --- | --- |
-| `SPRING_DATASOURCE_URL` | URL JDBC do Session pooler |
-| `SPRING_DATASOURCE_USERNAME` | Usuário do Session pooler |
-| `SPRING_DATASOURCE_PASSWORD` | Senha do banco do Supabase |
-| `SUPABASE_URL` | URL do projeto Supabase |
-| `SUPABASE_SERVICE_ROLE_KEY` | Chave legada `service_role`, exclusiva do servidor |
+| `SPRING_DATASOURCE_URL` | URL JDBC do PostgreSQL |
+| `SPRING_DATASOURCE_USERNAME` | Usuário do PostgreSQL |
+| `SPRING_DATASOURCE_PASSWORD` | Senha do PostgreSQL |
+| `R2_ENDPOINT` | Endpoint S3 exibido no Cloudflare R2 |
+| `R2_ACCESS_KEY_ID` | Access Key ID da chave S3 |
+| `R2_SECRET_ACCESS_KEY` | Secret Access Key da chave S3 |
+| `R2_PUBLIC_BASE_URL` | URL pública de leitura do bucket |
 | `HARDFIT_ADMIN_PASSWORD` | Senha escolhida para o painel publicado |
 
 O usuário padrão no Render é `admin`. Após o deploy, use `/` para a landing page, `/admin` para o painel e `/api/site-content` para verificar a API. Se quiser configurar contatos no build, adicione `VITE_INSTAGRAM_URL` e `VITE_WHATSAPP_URL` ao serviço. O link da Hotmart pode ser publicado pelo painel.

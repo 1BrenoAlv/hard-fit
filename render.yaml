@@ -16,11 +16,15 @@ services:
         value: admin
       - key: HARDFIT_ADMIN_PASSWORD
         sync: false
-      - key: SUPABASE_URL
+      - key: R2_ENDPOINT
         sync: false
-      - key: SUPABASE_SERVICE_ROLE_KEY
+      - key: R2_ACCESS_KEY_ID
         sync: false
-      - key: SUPABASE_STORAGE_BUCKET
+      - key: R2_SECRET_ACCESS_KEY
+        sync: false
+      - key: R2_PUBLIC_BASE_URL
+        sync: false
+      - key: R2_BUCKET
         value: hardfit-images
       - key: SPRING_PROFILES_ACTIVE
         value: production

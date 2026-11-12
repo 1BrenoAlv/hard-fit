@@ -31,9 +31,9 @@ O usuário padrão é `admin`. Se a senha estiver em branco, o Spring gera uma s
 | PUT | `/api/admin/evolutions/{id}` | Editar uma evolução |
 | DELETE | `/api/admin/evolutions/{id}` | Remover uma evolução |
 
-O painel React em `/admin` envia a imagem por `multipart/form-data`, no campo `file`. A API aceita JPG, PNG e WebP de até 5 MB e devolve uma URL usada nas configurações ou no comparativo. Sem Supabase configurado, os arquivos ficam em `uploads`. Os cadastros existentes por URL HTTPS continuam válidos.
+O painel React em `/admin` envia a imagem por `multipart/form-data`, no campo `file`. A API aceita JPG, PNG e WebP de até 5 MB e devolve uma URL usada nas configurações ou no comparativo. No ambiente local com as variáveis do R2 vazias, os arquivos ficam em `uploads`. Os cadastros existentes por URL HTTPS continuam válidos.
 
-Cada envio gera um nome novo e as imagens têm cache de um dia. Com `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` e `SUPABASE_STORAGE_BUCKET` configurados, os novos arquivos ficam no bucket público do Supabase. A chave de serviço fica no ambiente do Java.
+Cada envio gera um nome novo e as imagens têm cache de um dia. Para usar o R2, preencha `R2_ENDPOINT`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET` e `R2_PUBLIC_BASE_URL` em `backend/.env`. Use a URL da API S3 no endpoint e a URL pública de leitura do bucket em `R2_PUBLIC_BASE_URL`. As credenciais ficam no backend. No perfil `production`, o preenchimento completo é obrigatório.
 
 ## Swagger
 
