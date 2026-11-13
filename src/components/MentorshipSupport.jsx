@@ -4,12 +4,12 @@ const mentorshipSteps = [
   {
     icon: MessageCircle,
     title: 'Fale com a HardFit',
-    description: 'Comece pelo Instagram, WhatsApp ou pelo botão de contato aqui no site. Conte seu objetivo e tire suas dúvidas sobre a mentoria.',
+    description: 'Deixe seu contato e diga o que você quer saber sobre a mentoria.',
   },
   {
     icon: ShoppingBag,
     title: 'Inscreva-se na Hotmart',
-    description: 'Quando estiver pronto, siga para a página da Hotmart para conferir as condições e concluir a compra.',
+    description: 'Quando as inscrições abrirem, você poderá conferir as condições e se inscrever pela Hotmart.',
   },
   {
     icon: MessagesSquare,
@@ -38,11 +38,6 @@ export default function MentorshipSupport() {
             </li>
           ))}
         </ol>
-        <div className="mt-6 rounded-xl border border-lime/25 bg-lime/5 p-6 md:p-8">
-          <p className="section-label text-lime">Exemplo de conversa no fórum</p>
-          <p className="mt-4 text-sm leading-relaxed"><strong>Aluno:</strong> “Vi a aula sobre progressão, mas fiquei em dúvida sobre o que anotar depois do treino.”</p>
-          <p className="mt-2 text-sm leading-relaxed text-muted"><strong>Equipe HardFit:</strong> “Conte no tópico o que você já registra. A gente te ajuda a ligar o que foi explicado na aula ao seu dia a dia na academia.”</p>
-        </div>
       </div>
     </section>
   )

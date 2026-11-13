@@ -1,6 +1,6 @@
 # API HardFit
 
-API em Java 21 com Spring Boot, Spring JDBC e PostgreSQL. O controller recebe os pedidos, o service organiza as operações e o repository executa o SQL. A API cria as tabelas ao iniciar.
+API em Java 21 com Spring Boot, Spring JDBC e PostgreSQL. Um controller valida os dados do formulário e registra o pedido de contato. O Spring executa `schema.sql` na inicialização para criar a tabela `contact_requests`.
 
 ## Rodar localmente
 
@@ -12,62 +12,41 @@ cd backend
 mvn spring-boot:run
 ```
 
-Você também pode abrir o `pom.xml` no IntelliJ e executar `HardFitApplication`. O Compose publica o PostgreSQL em `localhost:5433` e guarda os dados em um volume. A API fica em `http://localhost:8080`.
+A API fica em `http://localhost:8080`. O PostgreSQL do Compose usa a porta local `5433`. Para personalizar a conexão, use `.env.example` como modelo para `backend/.env`.
 
-Preencha o arquivo `backend/.env` com `HARDFIT_ADMIN_USERNAME` e `HARDFIT_ADMIN_PASSWORD` e reinicie a API. Se o arquivo estiver ausente, copie `backend/.env.example`. Use valores sem aspas. O arquivo local fica fora do Git.
+## Enviar um pedido
 
-O usuário padrão é `admin`. Se a senha estiver em branco, o Spring gera uma senha temporária no console. Se você definiu `SPRING_SECURITY_USER_NAME` ou `SPRING_SECURITY_USER_PASSWORD` na configuração do IntelliJ, remova essas variáveis para usar os valores do arquivo.
-
-## Rotas
-
-| Método | Rota | Operação |
-| --- | --- | --- |
-| GET | `/api/site-content` | Consultar as configurações e a lista pública de evoluções |
-| GET | `/api/admin/csrf` | Obter o token para operações administrativas |
-| POST | `/api/admin/images` | Enviar um arquivo de imagem |
-| GET | `/api/images/{filename}` | Exibir uma imagem enviada |
-| PUT | `/api/admin/settings` | Substituir as configurações de links e imagens |
-| POST | `/api/admin/evolutions` | Cadastrar uma evolução |
-| PUT | `/api/admin/evolutions/{id}` | Editar uma evolução |
-| DELETE | `/api/admin/evolutions/{id}` | Remover uma evolução |
-
-O painel React em `/admin` envia a imagem por `multipart/form-data`, no campo `file`. A API aceita JPG, PNG e WebP de até 5 MB e devolve uma URL usada nas configurações ou no comparativo. No ambiente local com as variáveis do R2 vazias, os arquivos ficam em `uploads`. Os cadastros existentes por URL HTTPS continuam válidos.
-
-Cada envio gera um nome novo e as imagens têm cache de um dia. Para usar o R2, preencha `R2_ENDPOINT`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET` e `R2_PUBLIC_BASE_URL` em `backend/.env`. Use a URL da API S3 no endpoint e a URL pública de leitura do bucket em `R2_PUBLIC_BASE_URL`. As credenciais ficam no backend. No perfil `production`, o preenchimento completo é obrigatório.
-
-## Swagger
-
-Com a API em execução, abra [Swagger UI](http://localhost:8080/swagger-ui.html). A especificação OpenAPI está em [`/v3/api-docs`](http://localhost:8080/v3/api-docs).
-
-As rotas públicas podem ser testadas pelo Swagger. Para executar operações administrativas com autenticação e CSRF, use o exemplo abaixo.
-
-Para desativar a documentação em outro ambiente, defina `SPRINGDOC_SWAGGER_UI_ENABLED=false` e `SPRINGDOC_API_DOCS_ENABLED=false`.
-
-## Exemplo
+`POST /api/contact-requests` recebe JSON com `name` e `email` obrigatórios e `message` opcional. A API retorna `201 Created` depois de salvar e `400 Bad Request` para campos inválidos.
 
 ```bash
-curl -fsS http://localhost:8080/api/site-content
+curl -i http://localhost:8080/api/contact-requests \
+  -H 'Content-Type: application/json' \
+  -d '{"name":"Ana","email":"ana@example.com","message":"Quero saber mais sobre a mentoria."}'
 ```
 
-Para alterar as configurações, obtenha um token CSRF e reutilize o cookie de sessão. O curl solicita a senha administrativa. O exemplo usa `jq` para ler o token da resposta.
+A documentação local está no [Swagger UI](http://localhost:8080/swagger-ui.html).
+
+## Aviso por e-mail
+
+Crie uma [chave da API no Brevo](https://app.brevo.com/settings/keys/api) e configure um [remetente verificado](https://developers.brevo.com/docs/getting-started-with-senders-and-domains). Preencha as três variáveis em `backend/.env` para testar localmente ou em **Environment** no serviço do Render.
+
+| Variável | Valor |
+| --- | --- |
+| `BREVO_API_KEY` | Chave da API do Brevo |
+| `BREVO_SENDER_EMAIL` | Endereço do remetente verificado no Brevo |
+| `HARDFIT_CONTACT_EMAIL` | Caixa da equipe que recebe os avisos |
+
+Após gravar o pedido, a API envia um aviso à equipe pelo Brevo via HTTPS. O endereço informado no formulário vai no `Reply-To`. O pedido permanece no banco se o envio falhar. A falha é registrada nos logs e o envio seguinte acontece quando chega um novo pedido.
+
+Com as variáveis vazias, o formulário continua salvando os pedidos e os avisos ficam desativados.
+
+## Consultar pedidos
+
+Conecte-se ao banco pelo cliente SQL de sua preferência. Para usar o PostgreSQL local pelo Compose, rode este comando na raiz:
 
 ```bash
-hardfit_cookies=$(mktemp)
-hardfit_csrf=$(curl -fsS -u admin -c "$hardfit_cookies" http://localhost:8080/api/admin/csrf)
-hardfit_header=$(printf '%s' "$hardfit_csrf" | jq -r '.headerName + ": " + .token')
-
-curl -fsS -u admin -b "$hardfit_cookies" \
-  -H "$hardfit_header" -H 'Content-Type: application/json' \
-  -X PUT http://localhost:8080/api/admin/settings \
-  -d '{"hotmartUrl":"https://pay.hotmart.com/EXEMPLO","heroImageUrl":null,"fatLossImageUrl":null,"strengthImageUrl":null,"consistencyImageUrl":null}'
-
-rm "$hardfit_cookies"
+docker compose exec postgres psql -U hardfit -d hardfit \
+  -c 'SELECT name, email, message, created_at FROM contact_requests ORDER BY created_at DESC;'
 ```
 
-O `PUT` de configurações substitui todos os campos. Use `null` quando quiser deixar uma imagem ou o link sem configuração. Para cadastrar uma evolução, envie `title`, `beforeImageUrl` e `afterImageUrl` em JSON.
-
-Para outro ambiente, configure `SPRING_DATASOURCE_URL`, `SPRING_DATASOURCE_USERNAME`, `SPRING_DATASOURCE_PASSWORD`, `HARDFIT_ADMIN_USERNAME` e `HARDFIT_ADMIN_PASSWORD`.
-
-## Testes de segurança
-
-Na pasta `backend`, rode `mvn test`. O MockMvc exercita as rotas e os filtros reais de segurança com um serviço simulado, então esses testes dispensam o PostgreSQL.
+Para rodar os testes da API, execute `mvn test` na pasta `backend`.

@@ -1,6 +1,7 @@
 export const navigationLinks = [
   { label: 'Sua evolução', href: '#evolucao' },
   { label: 'Acompanhamento', href: '#acompanhamento' },
+  { label: 'Equipe', href: '#equipe' },
   { label: 'Dúvidas', href: '#duvidas' },
 ]
 
@@ -27,10 +28,10 @@ export const frequentlyAskedQuestions = [
   },
   {
     question: 'Onde compro e acesso a mentoria?',
-    answer: 'A compra é feita pela Hotmart. Após a confirmação, você acessa as aulas e a comunidade por lá, usando a conta vinculada à sua compra.',
+    answer: 'Quando as inscrições abrirem, a compra e o acesso às aulas e à comunidade serão pela Hotmart.',
   },
   {
     question: 'Posso conversar com a HardFit antes de comprar?',
-    answer: 'Sim. Use os canais oficiais do Instagram ou WhatsApp. O botão de contato do site reúne os canais disponíveis e o caminho para a inscrição.',
+    answer: 'Sim. Preencha o formulário de contato pelo botão “Falar com a HardFit” ou use os canais oficiais disponíveis.',
   },
 ]
