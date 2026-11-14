@@ -12,12 +12,6 @@ services:
         sync: false
       - key: SPRING_DATASOURCE_PASSWORD
         sync: false
-      - key: BREVO_API_KEY
-        sync: false
-      - key: BREVO_SENDER_EMAIL
-        sync: false
-      - key: HARDFIT_CONTACT_EMAIL
-        sync: false
       - key: SPRINGDOC_API_DOCS_ENABLED
         value: "false"
       - key: SPRINGDOC_SWAGGER_UI_ENABLED

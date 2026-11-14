@@ -46,4 +46,4 @@ O `render.yaml` configura um serviço Docker que hospeda o site e a API no mesmo
 | `SPRING_DATASOURCE_USERNAME` | Usuário do PostgreSQL |
 | `SPRING_DATASOURCE_PASSWORD` | Senha do PostgreSQL |
 
-Para receber um aviso por e-mail a cada pedido, configure as [variáveis do Brevo](backend/README.md#aviso-por-e-mail) em **Environment** no serviço.
+Os pedidos ficam disponíveis na tabela `contact_requests`. Se quiser ativar os avisos por e-mail futuramente, adicione as [variáveis do Brevo](backend/README.md#aviso-por-e-mail) em **Environment** no serviço.
