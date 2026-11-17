@@ -28,17 +28,17 @@ A documentação local está no [Swagger UI](http://localhost:8080/swagger-ui.ht
 
 ## Aviso por e-mail
 
-Crie uma [chave da API no Brevo](https://app.brevo.com/settings/keys/api) e configure um [remetente verificado](https://developers.brevo.com/docs/getting-started-with-senders-and-domains). Preencha as três variáveis em `backend/.env` para testar localmente ou em **Environment** no serviço do Render.
+Crie uma [chave da API no SendGrid](https://app.sendgrid.com/settings/api_keys) com permissão **Mail Send** e configure um [remetente verificado](https://www.twilio.com/docs/sendgrid/for-developers/sending-email/sender-identity). Preencha as variáveis em `backend/.env` para testar localmente ou em **Environment** no serviço do Render.
 
 | Variável | Valor |
 | --- | --- |
-| `BREVO_API_KEY` | Chave da API do Brevo |
-| `BREVO_SENDER_EMAIL` | Endereço do remetente verificado no Brevo |
-| `HARDFIT_CONTACT_EMAIL` | Caixa da equipe que recebe os avisos |
+| `SENDGRID_API_KEY` | Chave da API do SendGrid |
+| `SENDGRID_SENDER_EMAIL` | Endereço do remetente verificado no SendGrid |
+| `HARDFIT_CONTACT_EMAIL` | Caixa da equipe que recebe os avisos internos. Opcional |
 
-Após gravar o pedido, a API envia um aviso à equipe pelo Brevo via HTTPS. O endereço informado no formulário vai no `Reply-To`. O pedido permanece no banco se o envio falhar. A falha é registrada nos logs e o envio seguinte acontece quando chega um novo pedido.
+Após gravar o pedido, a API envia uma confirmação de cadastro ao visitante. O modelo em `src/main/resources/email/launch-confirmation.html` inclui o nome, a logo da HardFit e o aviso de lançamento da mentoria. Se a caixa da equipe estiver configurada, ela recebe um aviso separado com o endereço do visitante no `Reply-To`.
 
-Com as variáveis vazias, o formulário continua salvando os pedidos e os avisos ficam desativados.
+O formulário continua salvando os pedidos se faltar a chave ou o remetente ou se o envio falhar. As falhas de envio ficam registradas nos logs.
 
 ## Consultar pedidos
 

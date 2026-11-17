@@ -1,6 +1,6 @@
 package br.com.hardfit.controller;
 
-import br.com.hardfit.service.BrevoContactNotifier;
+import br.com.hardfit.service.SendGridContactNotifier;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ContactRequestController {
     private final JdbcTemplate jdbcTemplate;
-    private final BrevoContactNotifier contactNotifier;
+    private final SendGridContactNotifier contactNotifier;
 
-    public ContactRequestController(JdbcTemplate jdbcTemplate, BrevoContactNotifier contactNotifier) {
+    public ContactRequestController(JdbcTemplate jdbcTemplate, SendGridContactNotifier contactNotifier) {
         this.jdbcTemplate = jdbcTemplate;
         this.contactNotifier = contactNotifier;
     }
@@ -39,6 +39,7 @@ public class ContactRequestController {
                 message);
 
         contactNotifier.notifyTeam(name, email, message);
+        contactNotifier.confirmRegistration(name, email);
     }
 
     public record ContactRequest(

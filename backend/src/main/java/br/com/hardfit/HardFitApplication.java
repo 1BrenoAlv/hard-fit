@@ -6,7 +6,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-@OpenAPIDefinition(info = @Info(title = "HardFit API", version = "v1",
+@OpenAPIDefinition(info = @Info(
+        title = "HardFit API",
+        version = "v1",
         description = "Registro de pedidos de contato sobre a mentoria HardFit."))
 public class HardFitApplication {
     public static void main(String[] args) {

@@ -17,14 +17,24 @@ const founders = [
 
 export default function FoundersSection() {
   return (
-    <section id="equipe" aria-labelledby="founders-title" className="border-b border-cream/10 py-16 md:py-24">
+    <section
+      id="equipe"
+      aria-labelledby="founders-title"
+      className="border-b border-cream/10 py-16 md:py-24"
+    >
       <div className="page-container">
-        <h2 id="founders-title" className="text-4xl leading-tight tracking-tight md:text-5xl">
+        <h2
+          id="founders-title"
+          className="text-4xl leading-tight tracking-tight md:text-5xl"
+        >
           Quem está por trás da <em className="text-lime">HardFit</em>
         </h2>
         <div className="mt-9 grid gap-6 md:grid-cols-2">
           {founders.map(founder => (
-            <article key={founder.name} className="overflow-hidden rounded-xl border border-cream/15 bg-forest-light">
+            <article
+              key={founder.name}
+              className="overflow-hidden rounded-xl border border-cream/15 bg-forest-light"
+            >
               <img
                 src={founder.image}
                 alt={founder.name}
@@ -35,9 +45,15 @@ export default function FoundersSection() {
                 className={`block aspect-[4/3] w-full bg-forest object-cover ${founder.imagePosition}`}
               />
               <div className="border-t border-lime/20 p-6 sm:p-8">
-                <h3 className="text-2xl leading-tight font-bold tracking-tight">{founder.name}</h3>
-                <p className="mt-2 text-sm font-semibold text-lime">{founder.role}</p>
-                <p className="mt-5 max-w-lg text-sm leading-relaxed text-muted">{founder.bio}</p>
+                <h3 className="text-2xl leading-tight font-bold tracking-tight">
+                  {founder.name}
+                </h3>
+                <p className="mt-2 text-sm font-semibold text-lime">
+                  {founder.role}
+                </p>
+                <p className="mt-5 max-w-lg text-sm leading-relaxed text-muted">
+                  {founder.bio}
+                </p>
               </div>
             </article>
           ))}

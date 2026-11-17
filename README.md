@@ -46,4 +46,8 @@ O `render.yaml` configura um serviço Docker que hospeda o site e a API no mesmo
 | `SPRING_DATASOURCE_USERNAME` | Usuário do PostgreSQL |
 | `SPRING_DATASOURCE_PASSWORD` | Senha do PostgreSQL |
 
-Os pedidos ficam disponíveis na tabela `contact_requests`. Se quiser ativar os avisos por e-mail futuramente, adicione as [variáveis do Brevo](backend/README.md#aviso-por-e-mail) em **Environment** no serviço.
+Os pedidos ficam disponíveis na tabela `contact_requests`. Para ativar a confirmação de cadastro por e-mail, adicione as [variáveis do SendGrid](backend/README.md#aviso-por-e-mail) em **Environment** no serviço.
+
+## Frontend na Vercel
+
+Se a página for publicada separadamente na Vercel, adicione `HARDFIT_API_URL` nas variáveis de ambiente de **Production** do projeto da Vercel antes de publicar. Use a URL pública HTTPS do serviço web do Render, como `https://seu-servico.onrender.com`, sem `/api` no final. Faça um novo deploy na Vercel para aplicar a regra que encaminha `/api/contact-requests` ao backend.
