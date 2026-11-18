@@ -1,7 +1,7 @@
 package br.com.hardfit;
 
 import br.com.hardfit.controller.ContactRequestController;
-import br.com.hardfit.service.SendGridContactNotifier;
+import br.com.hardfit.service.EmailJsContactNotifier;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
@@ -32,7 +32,7 @@ class ContactRequestControllerTest {
     private JdbcTemplate jdbcTemplate;
 
     @MockitoBean
-    private SendGridContactNotifier contactNotifier;
+    private EmailJsContactNotifier contactNotifier;
 
     @Test
     void createsContactRequestWithoutExposingItsData() throws Exception {
@@ -49,8 +49,7 @@ class ContactRequestControllerTest {
                 eq("INSERT INTO contact_requests (name, email, message) VALUES (?, ?, ?)"),
                 eq("Ana D'Ávila"), eq("ana@example.com"), eq("Quero saber mais."));
         savedThenNotified.verify(contactNotifier)
-                .notifyTeam("Ana D'Ávila", "ana@example.com", "Quero saber mais.");
-        savedThenNotified.verify(contactNotifier).confirmRegistration("Ana D'Ávila", "ana@example.com");
+                .confirmRegistration("Ana D'Ávila", "ana@example.com", "Quero saber mais.");
     }
 
     @Test

@@ -28,17 +28,23 @@ A documentação local está no [Swagger UI](http://localhost:8080/swagger-ui.ht
 
 ## Aviso por e-mail
 
-Crie uma [chave da API no SendGrid](https://app.sendgrid.com/settings/api_keys) com permissão **Mail Send** e configure um [remetente verificado](https://www.twilio.com/docs/sendgrid/for-developers/sending-email/sender-identity). Preencha as variáveis em `backend/.env` para testar localmente ou em **Environment** no serviço do Render.
+1. No [painel do EmailJS](https://dashboard.emailjs.com/), abra **Email Services**, clique em **Add New Service**, selecione **Gmail** e conecte a conta da HardFit. Copie o **Service ID**.
+2. Em **Email Templates**, crie o modelo de confirmação. Use `{{clientEmail}}` em **To Email**, **HardFit Club** em **From Name** e **Cadastro confirmado na HardFit** em **Subject**. Use o remetente padrão, que é a conta Gmail conectada. No editor de código HTML, cole o conteúdo de [launch-confirmation.html](src/main/resources/email/launch-confirmation.html). Salve e copie o **Template ID**.
+3. Em **Account**, copie a **Public Key** e a **Private Key**. Em **Account → Security**, permita requisições da API para aplicações fora do navegador. Se a opção de exigir a chave privada estiver disponível, ative-a.
+4. Configure as variáveis em **Environment** no serviço do Render. Para rodar localmente, use `backend/.env`. Guarde a chave privada somente no backend.
 
 | Variável | Valor |
 | --- | --- |
-| `SENDGRID_API_KEY` | Chave da API do SendGrid |
-| `SENDGRID_SENDER_EMAIL` | Endereço do remetente verificado no SendGrid |
-| `HARDFIT_CONTACT_EMAIL` | Caixa da equipe que recebe os avisos internos. Opcional |
+| `EMAILJS_SERVICE_ID` | ID do serviço Gmail |
+| `EMAILJS_TEMPLATE_ID` | ID do template de confirmação |
+| `EMAILJS_PUBLIC_KEY` | Chave pública da conta |
+| `EMAILJS_PRIVATE_KEY` | Chave privada da conta |
 
-Após gravar o pedido, a API envia uma confirmação de cadastro ao visitante. O modelo em `src/main/resources/email/launch-confirmation.html` inclui o nome, a logo da HardFit e o aviso de lançamento da mentoria. Se a caixa da equipe estiver configurada, ela recebe um aviso separado com o endereço do visitante no `Reply-To`.
+O modelo inclui o nome, a logo da HardFit e o aviso de lançamento da mentoria. A logo usa um endereço HTTPS público. Publique o site com a imagem ou, se usar outro endereço para o site, ajuste a URL da imagem no HTML do EmailJS.
 
-O formulário continua salvando os pedidos se faltar a chave ou o remetente ou se o envio falhar. As falhas de envio ficam registradas nos logs.
+Para receber também um aviso interno, crie um segundo template com o e-mail fixo da equipe em **To Email** e `{{clientEmail}}` em **Reply To**. No corpo, use `{{clientName}}`, `{{clientEmail}}` e `{{message}}`. Em **Auto-Reply** do template de confirmação, vincule o segundo modelo. Cada aviso interno consome um envio adicional no plano.
+
+Depois do deploy, envie o formulário com um e-mail seu e confira a caixa de entrada e o histórico de envios do EmailJS. A API grava o pedido antes de tentar o envio. Se a configuração estiver incompleta ou o provedor recusar a mensagem, o pedido continua salvo. Os logs do backend registram falhas de envio.
 
 ## Consultar pedidos
 

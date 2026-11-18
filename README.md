@@ -26,7 +26,7 @@ npm run dev
 
 Abra [http://localhost:5173](http://localhost:5173). O Vite encaminha `/api` para `http://localhost:8080`. Para usar outra porta na API, defina `HARDFIT_API_URL` ao iniciar o Vite.
 
-Os links de WhatsApp e Instagram são opcionais. Para exibi-los no formulário, copie `.env.example` para `.env.local` e preencha `VITE_WHATSAPP_URL` e `VITE_INSTAGRAM_URL`.
+O perfil [@hardfit.club](https://www.instagram.com/hardfit.club/) aparece no formulário e no rodapé. Para adicionar o WhatsApp ao formulário, crie um `.env.local` na raiz e defina `VITE_WHATSAPP_URL`.
 
 ## Consultar pedidos
 
@@ -46,7 +46,7 @@ O `render.yaml` configura um serviço Docker que hospeda o site e a API no mesmo
 | `SPRING_DATASOURCE_USERNAME` | Usuário do PostgreSQL |
 | `SPRING_DATASOURCE_PASSWORD` | Senha do PostgreSQL |
 
-Os pedidos ficam disponíveis na tabela `contact_requests`. Para ativar a confirmação de cadastro por e-mail, adicione as [variáveis do SendGrid](backend/README.md#aviso-por-e-mail) em **Environment** no serviço.
+Os pedidos ficam disponíveis na tabela `contact_requests`. Para ativar a confirmação de cadastro por e-mail, siga a [configuração do EmailJS](backend/README.md#aviso-por-e-mail) e adicione as variáveis em **Environment** no serviço.
 
 ## Frontend na Vercel
 

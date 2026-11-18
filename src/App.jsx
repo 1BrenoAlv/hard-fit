@@ -20,6 +20,7 @@ import GoalCarousel from './components/GoalCarousel'
 import MentorshipSupport from './components/MentorshipSupport'
 import FoundersSection from './components/FoundersSection'
 import { frequentlyAskedQuestions, navigationLinks } from './content'
+import { mentorshipLinks } from './mentorshipLinks'
 
 const methodPrinciples = [
   {
@@ -334,6 +335,12 @@ export default function App() {
                 {link.label}
               </a>
             ))}
+            <a
+              href={mentorshipLinks.instagram}
+              className="inline-flex items-center gap-1.5 transition hover:text-lime"
+            >
+              Instagram <ArrowUpRight size={14} aria-hidden="true" />
+            </a>
           </nav>
           <a
             href="#inicio"
