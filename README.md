@@ -26,7 +26,7 @@ npm run dev
 
 Abra [http://localhost:5173](http://localhost:5173). O Vite encaminha `/api` para `http://localhost:8080`. Para usar outra porta na API, defina `HARDFIT_API_URL` ao iniciar o Vite.
 
-O perfil [@hardfit.club](https://www.instagram.com/hardfit.club/) aparece no formulário e no rodapé. Para adicionar o WhatsApp ao formulário, crie um `.env.local` na raiz e defina `VITE_WHATSAPP_URL`.
+O perfil [@hardfit.br](https://www.instagram.com/hardfit.br/) aparece no formulário e no rodapé. Para adicionar o WhatsApp ao formulário, crie um `.env.local` na raiz e defina `VITE_WHATSAPP_URL`.
 
 ## Consultar pedidos
 

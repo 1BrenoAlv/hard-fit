@@ -72,10 +72,18 @@ public class EmailJsContactNotifier {
                     .retrieve()
                     .toBodilessEntity();
         } catch (RestClientResponseException exception) {
-            logger.warn("Pedido salvo. O EmailJS recusou a confirmação com status {}.",
-                    exception.getStatusCode().value());
+            String reason = exception.getResponseBodyAsString();
+            for (String value : new String[] {privateKey, publicKey, serviceId, templateId, name, email, message}) {
+                if (value != null && !value.isEmpty()) {
+                    reason = reason.replace(value, "[oculto]");
+                }
+            }
+            reason = reason.replaceAll("[\\r\\n\\t]", " ");
+            logger.warn("Pedido salvo. O EmailJS recusou a confirmação com status {}. Motivo: {}",
+                    exception.getStatusCode().value(), reason.substring(0, Math.min(reason.length(), 500)));
         } catch (RestClientException exception) {
-            logger.warn("Pedido salvo. Não foi possível enviar a confirmação pelo EmailJS.");
+            logger.warn("Pedido salvo. Não foi possível enviar a confirmação pelo EmailJS. Causa: {}",
+                    exception.getMostSpecificCause().getClass().getSimpleName());
         }
     }
 
